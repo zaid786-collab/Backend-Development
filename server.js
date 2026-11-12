@@ -1,0 +1,13 @@
+// server ko start karna
+const dns = require("dns");
+
+dns.setServers(["192.168.1.1"]);
+
+const app = require("./src/app");
+const connectDB = require("./src/db/db")
+
+connectDB();
+
+app.listen(3000, () => {
+    console.log("server is running on port 3000");
+})
