@@ -1,4 +1,4 @@
-const e = require('express');
+const express = require('express');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     },
     password : {
         type: String,
-        rquired: true,
+        required: true,
     },
     age : {
         type: Number,
@@ -29,3 +29,5 @@ const userSchema = new mongoose.Schema({
 })
 
 const userModel = mongoose.model("user", userSchema);
+
+module.exports = userModel;

@@ -1,7 +1,7 @@
 const userModel = require('../models/user.models');
 const jsonwebtoken = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
-userModel();
 
 async function registerUser(req,res) {
 
@@ -20,20 +20,22 @@ async function registerUser(req,res) {
         })
     }
 
+    const hash = await bcrypt.hash(password,  10);
+
     const user = await userModel.create({
         username,
         email,
         role,
-        password,
+        password : hash,
         age,
     })
 
-    const token = jwt.sign({
+    const token = jsonwebtoken.sign({
         id: user._id,
         role: user.role,
     }, process.env.JWT_SECRET)
 
-    res.cookies("token", token);
+    res.cookie("token", token);
 
     res.status(201).json({
         message : "User registered successfully",
@@ -47,3 +49,23 @@ async function registerUser(req,res) {
     })
 
 }
+
+async function loginUser(req,res) {
+
+    const { username, email, password } = req.body;
+
+    const user = await userModel.findOne({
+        $or: [
+            {username},
+            {email}
+        ]
+    })
+
+    if(!user) {
+        return res.staus(401).json({message: "Invalid credentials"});
+    }
+
+    
+}
+
+module.exports = { registerUser };
